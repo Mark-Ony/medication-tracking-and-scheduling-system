@@ -14,6 +14,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Remove any trailing /rest/v1/ if present
 const cleanUrl = supabaseUrl.replace(/\/rest\/v1\/$/, '');
 
-console.log('✅ Supabase URL:', cleanUrl);
+console.log(' Supabase URL:', cleanUrl);
 
 export const supabase = createClient(cleanUrl, supabaseAnonKey);
