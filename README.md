@@ -1,4 +1,4 @@
-# 💊 Medication Management System
+#  Medication Management System
 
 A full-stack web app for nursing staff to track and administer patient medications across morning, afternoon, and evening time slots.
 
@@ -6,7 +6,7 @@ A full-stack web app for nursing staff to track and administer patient medicatio
 
 ---
 
-## 🧠 How It Works
+##  How It Works
 
 ```
 NURSE (Browser) → FRONTEND (Next.js) → BACKEND (Express) → DATABASE (Supabase)
