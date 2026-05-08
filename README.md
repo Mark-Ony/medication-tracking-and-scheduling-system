@@ -19,14 +19,14 @@ NURSE (Browser) → FRONTEND (Next.js) → BACKEND (Express) → DATABASE (Supab
 
 ---
 
-## ✨ Features
+##  Features
 
-- 🏥 Add and manage patients with room numbers
-- 💊 Assign multiple medications per patient
-- 🕐 Set morning, afternoon, and evening schedules per medication
-- ✅ Mark doses as administered — logged with nurse's name
-- 🔒 Prevents the same dose from being given twice
-- 📊 Live dashboard showing pending doses for the current time slot
+-  Add and manage patients with room numbers
+-  Assign multiple medications per patient
+-  Set morning, afternoon, and evening schedules per medication
+-  Mark doses as administered — logged with nurse's name
+-  Prevents the same dose from being given twice
+-  Live dashboard showing pending doses for the current time slot
 
 ---
 
@@ -40,27 +40,12 @@ NURSE (Browser) → FRONTEND (Next.js) → BACKEND (Express) → DATABASE (Supab
 
 ---
 
-## 📁 Project Structure
 
-```
-medication-management/
-│
-├── frontend/
-│   └── src/
-│       ├── app/page.tsx                       # Main dashboard UI
-│       ├── services/medication.service.ts     # Talks to the API
-│       └── lib/api.ts                         # API client
-│
-└── backend/
-    └── src/
-        ├── config/supabase.ts                 # Database connection
-        ├── routes/patient.routes.ts           # API endpoints
-        └── controllers/patient.controller.ts  # Business logic
-```
+
 
 ---
 
-## 🚀 Setup Guide
+##  Setup Guide
 
 ### What You Need First
 
@@ -74,31 +59,7 @@ medication-management/
 1. Go to [supabase.com](https://supabase.com) → create a new project
 2. Open the **SQL Editor** and run this script:
 
-```sql
--- Patients
-CREATE TABLE patients (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name TEXT NOT NULL,
-  room TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Medications
-CREATE TABLE medications (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  dosage TEXT NOT NULL,
-  instructions TEXT DEFAULT '',
-  morning BOOLEAN DEFAULT FALSE,
-  afternoon BOOLEAN DEFAULT FALSE,
-  evening BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Administration records
+s
 CREATE TABLE medication_schedules (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   medication_id UUID REFERENCES medications(id) ON DELETE CASCADE,
@@ -137,7 +98,7 @@ Start the server:
 
 ```bash
 npm run dev
-# ✅ Backend running at http://localhost:5000
+#  Backend running at http://localhost:3001
 ```
 
 ---
@@ -159,16 +120,16 @@ Start the app:
 
 ```bash
 npm run dev
-# ✅ Frontend running at http://localhost:3000
+# Frontend running at http://localhost:3000
 ```
 
-Open **http://localhost:3000** in your browser. 🎉
+Open **http://localhost:3000** in your browser. 
 
-> ⚠️ Both the backend and frontend terminals must be running at the same time.
+>  Both the backend and frontend terminals must be running at the same time.
 
 ---
 
-## ✅ Setup Checklist
+##  Setup Checklist
 
 - [ ] Create Supabase project
 - [ ] Run the 3 SQL table scripts
@@ -213,13 +174,13 @@ The app automatically detects the current time slot:
 
 | Time | Slot |
 |---|---|
-| 12:00 AM – 11:59 AM | 🌅 Morning |
-| 12:00 PM – 4:59 PM | 🌞 Afternoon |
-| 5:00 PM – 11:59 PM | 🌙 Evening |
+| 12:00 AM – 11:59 AM | Morning |
+| 12:00 PM – 4:59 PM |  Afternoon |
+| 5:00 PM – 11:59 PM |  Evening |
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 ```bash
 git checkout -b feature/your-feature
@@ -230,6 +191,6 @@ git push origin feature/your-feature
 
 ---
 
-## 📄 License
+##  License
 
 MIT License
