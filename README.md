@@ -1,156 +1,81 @@
 # 💊 Medication Management System
 
-A full-stack web application designed for nursing staff to track and manage patient medications across daily time slots — morning, afternoon, and evening.
+A full-stack web app for nursing staff to track and administer patient medications across morning, afternoon, and evening time slots.
+
+> Built as part of the YAP Engineering Interview Assignment — May 2026
 
 ---
 
-## 📋 Table of Contents
+## 🧠 How It Works
 
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-  - [Database Setup](#database-setup)
-- [Environment Variables](#environment-variables)
-- [API Reference](#api-reference)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
+```
+NURSE (Browser) → FRONTEND (Next.js) → BACKEND (Express) → DATABASE (Supabase)
+   clicks "Give"     sends request        processes it        saves the record
+```
+
+- **Frontend** — what the nurse sees and clicks
+- **Backend** — the brain that handles logic and rules
+- **Supabase** — where all patient and medication data is stored
 
 ---
 
-## Overview
+## ✨ Features
 
-In a hospital setting, nurses are responsible for administering medications to multiple patients, each with specific dosing schedules. This system provides a centralized dashboard to:
-
-- View all assigned patients and their medications
-- Track medication schedules across three daily time slots
-- Mark doses as administered with nurse attribution
-- Prevent duplicate or missed dose entries
-
----
-
-## Features
-
-- 🏥 **Patient Management** — Add, view, and delete patient records with room numbers
-- 💊 **Medication Tracking** — Assign multiple medications per patient with dosage and instructions
-- 🕐 **Time Slot Scheduling** — Define morning, afternoon, and evening doses per medication
-- ✅ **Dose Administration** — Mark doses as given with automatic nurse name logging
-- 🔒 **Duplicate Prevention** — Blocks re-administration of already-given doses
-- 📊 **Live Dashboard** — Stats for total patients, medications, and pending doses
-- 🌅 **Dynamic Time Awareness** — UI adapts to current time slot automatically
+- 🏥 Add and manage patients with room numbers
+- 💊 Assign multiple medications per patient
+- 🕐 Set morning, afternoon, and evening schedules per medication
+- ✅ Mark doses as administered — logged with nurse's name
+- 🔒 Prevents the same dose from being given twice
+- 📊 Live dashboard showing pending doses for the current time slot
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
-### Frontend
-| Technology | Purpose |
+| Layer | Technology |
 |---|---|
-| Next.js 14 | React framework with App Router |
-| TypeScript | Type safety |
-| Tailwind CSS | Utility-first styling |
-
-### Backend
-| Technology | Purpose |
-|---|---|
-| Node.js | Runtime environment |
-| Express.js | REST API framework |
-| TypeScript | Type safety |
-| Supabase | PostgreSQL database + Auth |
+| Frontend | Next.js 14, TypeScript, Tailwind CSS |
+| Backend | Node.js, Express.js, TypeScript |
+| Database | Supabase (PostgreSQL) |
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 medication-management/
 │
-├── frontend/                   # Next.js application
-│   ├── src/
-│   │   ├── app/
-│   │   │   └── page.tsx        # Main dashboard UI
-│   │   ├── services/
-│   │   │   └── medication.service.ts   # API service layer
-│   │   └── lib/
-│   │       └── api.ts          # Axios/fetch API client
-│   ├── public/
-│   ├── package.json
-│   └── .env.local
+├── frontend/
+│   └── src/
+│       ├── app/page.tsx                       # Main dashboard UI
+│       ├── services/medication.service.ts     # Talks to the API
+│       └── lib/api.ts                         # API client
 │
-└── backend/                    # Express.js API
-    ├── src/
-    │   ├── config/
-    │   │   └── supabase.ts     # Supabase client config
-    │   ├── routes/
-    │   │   └── patient.routes.ts       # Route definitions
-    │   └── controllers/
-    │       └── patient.controller.ts   # Business logic
-    ├── package.json
-    └── .env
+└── backend/
+    └── src/
+        ├── config/supabase.ts                 # Database connection
+        ├── routes/patient.routes.ts           # API endpoints
+        └── controllers/patient.controller.ts  # Business logic
 ```
 
 ---
 
-## Getting Started
+## 🚀 Setup Guide
 
-### Prerequisites
+### What You Need First
 
-- Node.js v18+
-- npm or yarn
-- A [Supabase](https://supabase.com) account and project
-
----
-
-### Backend Setup
-
-```bash
-# 1. Navigate to the backend directory
-cd backend
-
-# 2. Install dependencies
-npm install
-
-# 3. Copy environment file and fill in your values
-cp .env.example .env
-
-# 4. Start the development server
-npm run dev
-```
-
-The backend will run on `http://localhost:5000` by default.
+- [Node.js v18+](https://nodejs.org)
+- [A free Supabase account](https://supabase.com)
 
 ---
 
-### Frontend Setup
+### Step 1 — Set Up the Database (Supabase)
 
-```bash
-# 1. Navigate to the frontend directory
-cd frontend
-
-# 2. Install dependencies
-npm install
-
-# 3. Copy environment file and fill in your values
-cp .env.example .env.local
-
-# 4. Start the development server
-npm run dev
-```
-
-The frontend will run on `http://localhost:3000` by default.
-
----
-
-### Database Setup
-
-Run the following SQL in your Supabase SQL Editor to create the required tables:
+1. Go to [supabase.com](https://supabase.com) → create a new project
+2. Open the **SQL Editor** and run this script:
 
 ```sql
--- Patients table
+-- Patients
 CREATE TABLE patients (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
@@ -159,7 +84,7 @@ CREATE TABLE patients (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Medications table
+-- Medications
 CREATE TABLE medications (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
@@ -173,7 +98,7 @@ CREATE TABLE medications (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Medication schedules (administration records)
+-- Administration records
 CREATE TABLE medication_schedules (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   medication_id UUID REFERENCES medications(id) ON DELETE CASCADE,
@@ -187,110 +112,124 @@ CREATE TABLE medication_schedules (
 );
 ```
 
+3. Go to **Project Settings → API** and copy your:
+   - `Project URL`
+   - `service_role` secret key
+
 ---
 
-## Environment Variables
+### Step 2 — Run the Backend
 
-### Backend — `.env`
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file:
 
 ```env
 PORT=5000
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_SERVICE_KEY=your_supabase_service_role_key
+SUPABASE_URL=your_project_url_here
+SUPABASE_SERVICE_KEY=your_service_role_key_here
 ```
 
-### Frontend — `.env.local`
+Start the server:
+
+```bash
+npm run dev
+# ✅ Backend running at http://localhost:5000
+```
+
+---
+
+### Step 3 — Run the Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env.local` file:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
+Start the app:
+
+```bash
+npm run dev
+# ✅ Frontend running at http://localhost:3000
+```
+
+Open **http://localhost:3000** in your browser. 🎉
+
+> ⚠️ Both the backend and frontend terminals must be running at the same time.
+
 ---
 
-## API Reference
+## ✅ Setup Checklist
+
+- [ ] Create Supabase project
+- [ ] Run the 3 SQL table scripts
+- [ ] Copy Supabase URL and service key
+- [ ] Add keys to `backend/.env`
+- [ ] `npm install` + `npm run dev` in `/backend`
+- [ ] Add API URL to `frontend/.env.local`
+- [ ] `npm install` + `npm run dev` in `/frontend`
+- [ ] Open `http://localhost:3000`
+
+---
+
+## 📡 API Reference
 
 ### Patients
-
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/patients` | Get all patients with medications |
+| `GET` | `/api/patients` | Get all patients + medications |
 | `GET` | `/api/patients/:id` | Get a single patient |
 | `POST` | `/api/patients` | Create a new patient |
 | `PUT` | `/api/patients/:id` | Update a patient |
-| `DELETE` | `/api/patients/:id` | Delete a patient and their medications |
+| `DELETE` | `/api/patients/:id` | Delete patient + their medications |
 
 ### Medications
-
 | Method | Endpoint | Description |
 |---|---|---|
 | `POST` | `/api/medications` | Add medication to a patient |
 | `PUT` | `/api/medications/:id` | Update a medication |
 | `DELETE` | `/api/medications/:id` | Delete a medication |
-| `POST` | `/api/medications/administer` | Mark a dose as administered |
+| `POST` | `/api/medications/administer` | Mark a dose as given |
 
 ### Schedule
-
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/schedule/today` | Get today's schedule for current time slot |
+| `GET` | `/api/schedule/today` | Get schedule for current time slot |
 
 ---
 
-### Example Request — Add Medication
+## 🕐 Time Slot Logic
 
-```json
-POST /api/medications
-{
-  "patient_id": "uuid-here",
-  "name": "Amoxicillin",
-  "dosage": "500mg",
-  "instructions": "Take with food",
-  "morning": true,
-  "afternoon": false,
-  "evening": true
-}
-```
+The app automatically detects the current time slot:
 
-### Example Request — Administer Dose
-
-```json
-POST /api/medications/administer
-{
-  "medication_id": "uuid-here",
-  "patient_id": "uuid-here",
-  "time_slot": "morning",
-  "nurse_name": "Nurse Jane"
-}
-```
-
----
-
-## Time Slot Logic
-
-The system automatically determines the current time slot based on server time:
-
-| Time Range | Slot |
+| Time | Slot |
 |---|---|
-| 00:00 – 11:59 | 🌅 Morning |
-| 12:00 – 16:59 | 🌞 Afternoon |
-| 17:00 – 23:59 | 🌙 Evening |
+| 12:00 AM – 11:59 AM | 🌅 Morning |
+| 12:00 PM – 4:59 PM | 🌞 Afternoon |
+| 5:00 PM – 11:59 PM | 🌙 Evening |
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch — `git checkout -b feature/your-feature`
-3. Commit your changes — `git commit -m 'Add some feature'`
-4. Push to the branch — `git push origin feature/your-feature`
-5. Open a Pull Request
-
----
-
-## License
-
-This project is licensed under the MIT License.
+```bash
+git checkout -b feature/your-feature
+git commit -m "Add your feature"
+git push origin feature/your-feature
+# Then open a Pull Request
+```
 
 ---
 
-> Built as part of the YAP Engineering Interview Assignment — May 2026
+## 📄 License
+
+MIT License
